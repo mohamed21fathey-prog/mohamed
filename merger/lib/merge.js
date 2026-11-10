@@ -5,11 +5,20 @@ const path = require("path");
 const { LIMITS } = require("./env");
 const { ensureExecutable } = require("./util");
 
-function binOf(mod, fallback) {
-  try { const p = require(mod); return p.path || p; } catch { return fallback; }
+// ⚠️ مهم جدًا لـ Vercel: الـ require يجب أن يكون نصًا حرفيًا (وليس متغيرًا) —
+// الطلب الديناميكي يمنع أداة التتبع NFT من تضمين الحزم والبيناريات في حزمة الدالة،
+// فيفشل require داخل الـ lambda ويظهر ENOENT عند copyfile.
+let ffmpegMod = null, ffprobeMod = null, binLoadError = "";
+try { ffmpegMod = require("ffmpeg-static"); } catch (e) { binLoadError += `ffmpeg-static: ${e?.message || e}; `; }
+try { ffprobeMod = require("ffprobe-static"); } catch (e) { binLoadError += `ffprobe-static: ${e?.message || e}`; }
+
+function binOf(raw, baseName) {
+  const p = typeof raw === "string" ? raw : raw?.path;
+  if (!p) throw new Error(`تعذّر تحميل ${baseName} داخل البيئة الحالية — ${binLoadError || "الحزمة غير مثبتة"}`);
+  return p;
 }
-const FFMPEG = () => ensureExecutable(binOf("ffmpeg-static", "ffmpeg"));
-const FFPROBE = () => ensureExecutable(binOf("ffprobe-static", "ffprobe"));
+const FFMPEG = () => ensureExecutable(binOf(ffmpegMod, "ffmpeg-static"));
+const FFPROBE = () => ensureExecutable(binOf(ffprobeMod, "ffprobe-static"));
 
 function run(cmd, args, opts = {}) {
   return new Promise((resolve, reject) => {
