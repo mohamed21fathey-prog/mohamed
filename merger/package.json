@@ -1,0 +1,11 @@
+{
+  "name": "video-merger-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "موقع دمج الفيديوهات مع API عام — Node.js خالص على Vercel مع Turso",
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0"
+  }
+}

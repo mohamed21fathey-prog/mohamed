@@ -1,2 +1,34 @@
-skills/
+# أسرار — لا تُرفع أبدًا (منذ أول commit)
+.env
+.env.*
+!.env.example
+merger/.env
+
+# اعتماديات وبناء
 node_modules/
+merger/node_modules/
+.next/
+merger/.vercel/
+.vercel/
+
+# سجلات وملفات النظام
+*.log
+dev.log
+.zscripts/
+Caddyfile
+agent-ctx/
+
+# مجلدات عمل محلية
+download/
+upload/
+scripts/kie-test-task.txt
+
+# ملفات اختبار مؤقتة
+tmp/
+# مجلدات النظام الرملي — لا علاقة لها بالمشروع
+skills/
+tests/
+db/
+tool-results/
+agent-ctx/
+*.tsbuildinfo
